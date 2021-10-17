@@ -65,6 +65,7 @@ void ICACHE_RAM_ATTR handleBtn();
 /* Global variables */
 byte physicalMode = 0; // Using the switch, button, and tyhe potentiometer on the module, decide which mode to execute
 unsigned long lastPressTime = 0;
+byte pressCou = 0;
 
 const char delim[2] = ":";
 
@@ -111,7 +112,7 @@ int dwmIterator = 0; // Iterator to imitate outer for loop
 int outputDwm = 0; // Will be our final result
 int dwmMeasCou = 0; // How many measurements taken so far
 
-CRGB secsIndicatorCol = CRGB::Magenta; // seconds indicator color
+CRGB secsIndicatorCol = CRGB(154, 205, 16); // seconds indicator color
 CRGB IndicatorCol = CRGB::White; // music indicator color
 
 CRGB leds[NUM_LEDS];
@@ -282,7 +283,7 @@ void handleRemoteMode(){
     pwmVu();
   }
   else if (currMode == 13){
-    torch(CRGB(255, 255, 220));
+    torch(CRGB(255, 150, 40));
   }
   else if (14 <= currMode && currMode <= 15){
     animatedFlag(currMode);
@@ -292,53 +293,44 @@ void handleRemoteMode(){
 void handleBtn(){
   if (DEBUG_ENABLED)
     Serial.println("Button pressed");
-    
-  detachInterrupt(digitalPinToInterrupt(BTN));
   
   delay(10);
   while(!digitalRead(BTN)) // wait until the btn released
     delay(2);
 
   if ( (millis() - lastPressTime) >= BUTTON_CONSIDERATION_LIMIT ){// i.e. button intentionally pressed
-    int pressCou = 1;
-    
-    while ( (millis() - lastPressTime) < BUTTON_DOUBLE_PRESS_TIMEOUT ) { // wait for second press
-      if(!digitalRead(BTN)){
-        delay(10);
-        pressCou++;
-      }
-      if (pressCou >= BUTTON_MAX_PRESS_COU){
-        pressCou = BUTTON_MAX_PRESS_COU;
-        break;
-      }
-      if (DEBUG_ENABLED){
-        Serial.print("Waiting for second press... ");
-        Serial.print("Current press count:");
-        Serial.println(pressCou);
-        }
-    }
-
-    switch(pressCou){
-      case 1:
-        currMode++;
-        currMode %= EMERGENCY_TORCH_NUM;
-        break;
-      case 2:
-        indicateSeconds = !indicateSeconds; // toggle
-        break;
-      default:
-        ;
-    }
-
-    
+    pressCou++;
+    lastPressTime = millis();
   }
-
-    
-  attachInterrupt(digitalPinToInterrupt(BTN), handleBtn, FALLING); 
 }
 
 void emergencyTorch(){
   FastLED.setBrightness((1023 - analogRead(POT))/4);
+
+  if (pressCou){
+    while( (millis() - lastPressTime) < BUTTON_DOUBLE_PRESS_TIMEOUT) //wait for second or more presses
+      ;
+  }
+
+  if (pressCou >= BUTTON_MAX_PRESS_COU)
+    pressCou = BUTTON_MAX_PRESS_COU;
+
+  switch(pressCou){
+  case 1:
+    currMode++;
+    currMode %= EMERGENCY_TORCH_NUM;
+    pressCou = 0;
+    break;
+  case 2:
+    indicateSeconds = !indicateSeconds; // toggle
+    pressCou = 0;
+    break;
+  default:
+    ;
+}
+
+
+
 
   switch(currMode){ 
     case 3:
@@ -357,12 +349,13 @@ void emergencyTorch(){
       ;
     }
 
-  if (DEBUG_ENABLED){
+  /*if (DEBUG_ENABLED){
     Serial.print("Emergency Torch Mode: ");
     Serial.println(currMode);
-  }
+  }*/
 
 }
+
 
 void handleAdalight(){
   uint8_t prefix[] = {'A', 'd', 'a'}, hi, lo, chk, i;
@@ -424,7 +417,6 @@ void loop(){
       handleAdalight();
       break;
     }
-
     default:
       ;   
   }

@@ -1,0 +1,49 @@
+void handleBtnOld(){
+  if (DEBUG_ENABLED)
+    Serial.println("Button pressed");
+    
+  detachInterrupt(digitalPinToInterrupt(BTN));
+  
+  delay(10);
+  while(!digitalRead(BTN)) // wait until the btn released
+    delay(2);
+
+  if ( (millis() - lastPressTime) >= BUTTON_CONSIDERATION_LIMIT ){// i.e. button intentionally pressed
+    int pressCou = 1;
+    lastPressTime = millis();
+    
+    while ( (millis() - lastPressTime) < BUTTON_DOUBLE_PRESS_TIMEOUT ) { // wait for second press
+      if(!digitalRead(BTN) && ( (millis() - lastPressTime) >= BUTTON_CONSIDERATION_LIMIT) ){ // i.e. button intentionally pressed
+        delay(10);
+        pressCou++;
+        //lastPressTime = millis();
+      }
+      if (pressCou >= BUTTON_MAX_PRESS_COU){
+        pressCou = BUTTON_MAX_PRESS_COU;
+        break;
+      }
+      if (DEBUG_ENABLED){
+        Serial.print("Waiting for second press... ");
+        Serial.print("Current press count:");
+        Serial.println(pressCou);
+        }
+    }
+
+    switch(pressCou){
+      case 1:
+        currMode++;
+        currMode %= EMERGENCY_TORCH_NUM;
+        break;
+      case 2:
+        indicateSeconds = !indicateSeconds; // toggle
+        break;
+      default:
+        ;
+    }
+
+    
+  }
+
+    
+  attachInterrupt(digitalPinToInterrupt(BTN), handleBtn, FALLING); 
+}
