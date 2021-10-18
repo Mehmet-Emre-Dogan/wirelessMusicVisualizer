@@ -1,6 +1,14 @@
 # wirelessMusicVisualizer
-Using two node MCU ESP8266 modules and addressable RGB LED strip, visualize the music, display animated flags, and more.
+Using two node MCU ESP8266 modules and addressable RGB LED strip, visualize the music, display animated flags, brighten the darkness (with the help torch and emergency torch modes) and evem it is Adalight compatible. Therefore, you can use it with any kind of Adalight compatible software, such as [Prismatik Unofficial](https://github.com/psieg/Lightpack)
 
+## Necessary Libraries
+Please install the libraries below if you have not done yet.
+- [Fastled library](https://github.com/FastLED/FastLED)
+- [Adafruit GFX library](https://github.com/adafruit/Adafruit-GFX-Library)
+- [Adafruit SSD1306 library](https://github.com/adafruit/Adafruit_SSD1306)
+- [SoftwareI2C library](https://github.com/Seeed-Studio/Arduino_Software_I2C)
+
+## Schematics
 ### Transmitter
 ![Transmitter Schematic](./Transmitter.png)
 
@@ -9,7 +17,12 @@ Using two node MCU ESP8266 modules and addressable RGB LED strip, visualize the 
 
 
 ## Pictures
+
 ### Transmitter
+#### Inside of the transmitter station
+![insideTransmitter.jpg](./pictures/insideTransmitter.jpg)
+#### Transmitter station lid
+![transmitterControls.jpg](./pictures/transmitterControls.jpg)
 
 ### Receiver
 #### Inside of the receiver station
@@ -21,4 +34,8 @@ Using two node MCU ESP8266 modules and addressable RGB LED strip, visualize the 
 #### Adjustable LM2596 step down converter module
 ![lm2596.jpg](./pictures/lm2596.jpg)
 
-## Schematics
+### Recording setup
+The setup to record line output of the PC with any mobile phone.
+
+
+
