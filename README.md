@@ -1,11 +1,15 @@
 # wirelessMusicVisualizer
-Using two node MCU ESP8266 modules and addressable RGB LED strip, visualize the music, display animated flags, brighten the darkness (with the help torch and emergency torch modes) and evem it is Adalight compatible. Therefore, you can use it with any kind of Adalight compatible software, such as [Prismatik Unofficial](https://github.com/psieg/Lightpack)
+Using two node MCU ESP8266 modules and addressable RGB LED strip, visualize the music, display animated flags, brighten the darkness (with the help of torch and emergency torch modes), and even Adalight compatible. Therefore, you can use it with any kind of Adalight compatible software, such as [Prismatik Unofficial](https://github.com/psieg/Lightpack)
 
 
 ## Videos & Gifs of the project
+<div align="center">
+<p>![demoGif](https://user-images.githubusercontent.com/87245315/138785878-a3807bdd-ef61-46ae-9055-652e1cd40250.gif)</p>
+<br>
+</div>
 
 - Please watch the [complete demonstration video](https://www.youtube.com/watch?v=xi880eUqIho) on YouTube.
-- You may also want to watch my [playlist](https://www.youtube.com/playlist?list=PLV24y8ZhNEglrx4vv8YyNaVGACWpZlcM2) consising of uncopyrighted musics visualized by this project.
+- You may also want to watch my [playlist](https://www.youtube.com/playlist?list=PLV24y8ZhNEglrx4vv8YyNaVGACWpZlcM2) consisting of uncopyrighted music visualized by this project.
 
 ## Necessary Libraries
 Please install the libraries below if you have not done yet.
@@ -42,9 +46,9 @@ Please install the libraries below if you have not done yet.
 
 ### Recording setup
 The setup to record line output of the PC with any mobile phone.
-There is a 10 kOhm resistor between any signal ouput channel, left or right, to mobile phone microhone input.
+There is a 10 kOhm resistor between any signal output channel, left or right, to mobile phone microphone input.
 
-#### Y cable to split recording setup and my project (transmitter station + headphones, which also uses an another Y cable)
+#### Y cable to split recording setup and my project (transmitter station + headphones, which also uses another Y cable)
 ![yCable.jpg](pictures/yCable.jpg)
 
 #### Recording setup
@@ -52,6 +56,3 @@ There is a 10 kOhm resistor between any signal ouput channel, left or right, to 
 
 #### 10 kOhm resistor close up
 ![resistor.jpg](pictures/resistor.jpg)
-
-
-
