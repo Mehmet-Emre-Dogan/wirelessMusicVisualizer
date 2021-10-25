@@ -39,13 +39,13 @@ The setup to record line output of the PC with any mobile phone.
 There is a 10 kOhm resistor between any signal ouput channel, left or right, to mobile phone microhone input.
 
 #### Y cable to split recording setup and my poject (transmitter station + headphones)
-![lm2596.jpg](.pictures/yCable.jpg)
+![yCable.jpg](pictures/yCable.jpg)
 
 #### Recording setup
-![lm2596.jpg](pictures/soundRecordingCable.jpg)
+![soundRecordingCable.jpg](pictures/soundRecordingCable.jpg)
 
 #### 10 kOhm resistor close up
-![lm2596.jpg](pictures/resistor.jpg)
+![resistor.jpg](pictures/resistor.jpg)
 
 
 
