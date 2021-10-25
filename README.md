@@ -4,8 +4,8 @@ Using two node MCU ESP8266 modules and addressable RGB LED strip, visualize the 
 
 ## Videos & Gifs of the project
 
-Please watch the [complete demonstration video](https://www.youtube.com/watch?v=xi880eUqIho) on YouTube
-You may also want to watch my [playlist](https://www.youtube.com/playlist?list=PLV24y8ZhNEglrx4vv8YyNaVGACWpZlcM2) consising of uncopyrighted musics visualized by this project.
+- Please watch the [complete demonstration video](https://www.youtube.com/watch?v=xi880eUqIho) on YouTube.
+- You may also want to watch my [playlist](https://www.youtube.com/playlist?list=PLV24y8ZhNEglrx4vv8YyNaVGACWpZlcM2) consising of uncopyrighted musics visualized by this project.
 
 ## Necessary Libraries
 Please install the libraries below if you have not done yet.
