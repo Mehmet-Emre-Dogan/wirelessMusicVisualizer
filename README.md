@@ -4,8 +4,7 @@ Using two node MCU ESP8266 modules and addressable RGB LED strip, visualize the 
 
 ## Videos & Gifs of the project
 <div align="center">
-<p></p>
-  ![demoGif](https://user-images.githubusercontent.com/87245315/138785878-a3807bdd-ef61-46ae-9055-652e1cd40250.gif)
+<img src=https://user-images.githubusercontent.com/87245315/138785878-a3807bdd-ef61-46ae-9055-652e1cd40250.gif alt= demoGif></img>
 <br>
 </div>
 
