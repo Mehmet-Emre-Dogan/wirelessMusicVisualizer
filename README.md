@@ -1,6 +1,8 @@
 # wirelessMusicVisualizer
 Using two node MCU ESP8266 modules and addressable RGB LED strip, visualize the music, display animated flags, brighten the darkness (with the help torch and emergency torch modes) and evem it is Adalight compatible. Therefore, you can use it with any kind of Adalight compatible software, such as [Prismatik Unofficial](https://github.com/psieg/Lightpack)
 
+Please watch the [complete demonstration video](https://www.youtube.com/watch?v=xi880eUqIho) on YouTube
+
 ## Necessary Libraries
 Please install the libraries below if you have not done yet.
 - [Fastled library](https://github.com/FastLED/FastLED)
@@ -38,7 +40,7 @@ Please install the libraries below if you have not done yet.
 The setup to record line output of the PC with any mobile phone.
 There is a 10 kOhm resistor between any signal ouput channel, left or right, to mobile phone microhone input.
 
-#### Y cable to split recording setup and my poject (transmitter station + headphones)
+#### Y cable to split recording setup and my project (transmitter station + headphones, which also uses an another Y cable)
 ![yCable.jpg](pictures/yCable.jpg)
 
 #### Recording setup
