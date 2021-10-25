@@ -1,7 +1,11 @@
 # wirelessMusicVisualizer
 Using two node MCU ESP8266 modules and addressable RGB LED strip, visualize the music, display animated flags, brighten the darkness (with the help torch and emergency torch modes) and evem it is Adalight compatible. Therefore, you can use it with any kind of Adalight compatible software, such as [Prismatik Unofficial](https://github.com/psieg/Lightpack)
 
+
+## Videos & Gifs of the project
+
 Please watch the [complete demonstration video](https://www.youtube.com/watch?v=xi880eUqIho) on YouTube
+You may also want to watch my [playlist](https://www.youtube.com/playlist?list=PLV24y8ZhNEglrx4vv8YyNaVGACWpZlcM2) consising of uncopyrighted musics visualized by this project.
 
 ## Necessary Libraries
 Please install the libraries below if you have not done yet.
