@@ -14,8 +14,6 @@ The real project looks way more smoother than the gif. You may watch the YouTube
 - Please watch the [complete demonstration video](https://www.youtube.com/watch?v=xi880eUqIho) on YouTube.
 - You may also want to watch my [playlist](https://www.youtube.com/playlist?list=PLV24y8ZhNEglrx4vv8YyNaVGACWpZlcM2) consisting of uncopyrighted music visualized by this project.
 
-<br>
-
 ## Necessary Libraries
 Please install the libraries below if you have not done yet.
 - [Fastled library](https://github.com/FastLED/FastLED)
