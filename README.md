@@ -3,22 +3,22 @@ Using two node MCU ESP8266 modules and addressable RGB LED strip, visualize the 
 
 ## Features
 ### Music visualization (Transmitter needed)
-Smooth bar music visualizer in different color modes (steady gradient, flowing gradient, color shifting)
-Fast bar visualizer
-Brightness changing visualizer
-Optional music indicator and seconds indicator for all modes
+- Smooth bar music visualizer in different color modes (steady gradient, flowing gradient, color shifting)
+- Fast bar visualizer
+- Brightness changing visualizer
+- Optional music indicator and seconds indicator for all modes
 ### Torch (Transmitter needed)
-Warm white light, 2700K color temperature.
-Optional seconds indicator
+- Warm white light, 2700K color temperature.
+- Optional seconds indicator
 ### Animated flags (Transmitter needed)
-Display your county's flag colors on the RGB stick
-Not music reactive
+- Display your county's flag colors on the RGB stick
+- Not music reactive
 ### Emergency torch mode (nothing needed) 
-Various colored lights in the color range 2700K to 6500K
-Adjustable brightness
-Optional seconds indicator
+- Various colored lights in the color range 2700K to 6500K
+- Adjustable brightness
+- Optional seconds indicator
 ### Adalight mode (USB micro type-B to type A cable needed)
-Adalight client for Adalight compatible software
+- Adalight client for Adalight compatible software
 
 
 ## Videos & Gifs of the project
