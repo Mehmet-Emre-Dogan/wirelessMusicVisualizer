@@ -111,6 +111,7 @@ When necessary, the external boost converter module can be used to power the dev
 
 #### Attached voltmeter ampermeter combo device
 Since the meter screen is multiplexing the seven-segment displays, in the above photos, the screen seems corrupted. However, this is not the case. By the way, with the naked eye, this multiplexing is not noticeable as expected.
+
 ![voltmeterAmmeterCombo.gif](pictures/voltmeterAmmeterCombo.gif)
 
 ### Recording setup
