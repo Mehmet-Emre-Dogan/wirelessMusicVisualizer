@@ -131,7 +131,7 @@ void restart_(){
 }
 
 void normalizeVars(){
-  for(int i = 0; i<(MENU_COUNT - 1); i++){
+  for(int i = 0; i<(MENU_COUNT - 2); i++){
     varArr[i] = (uint8_t) (varArr_x2[i]/2);
   }
 
@@ -427,7 +427,7 @@ void loop() {
     UDP.beginPacket(UDP.remoteIP(), UDP_RESPONSE_PORT);
     char* strBuf = "err";
     String mystr = (String(measureAverage(NUM_MEASUREMENTS)) + ":" );
-    for( int i = 0; i < (MENU_COUNT-1); i++){
+    for( int i = 0; i < (MENU_COUNT-3); i++){
       if (i == 3)
         continue;
       mystr += (String(varArr[i]) + ":");
@@ -486,14 +486,14 @@ int measureRaw(){
 
 
 void loadEEPROM(){
-  for(int i = 0; i < (MENU_COUNT - 1); i++){
+  for(int i = 0; i < (MENU_COUNT - 2); i++){
     varArr[i] = readEEPROM(i);
     varArr_x2[i] = 2*readEEPROM(i);
   }  
 }
 
 void dumpEEPROM(){
-  for(int i = 0; i < (MENU_COUNT - 1); i++){
+  for(int i = 0; i < (MENU_COUNT - 2); i++){
     updateEEPROM(i, (byte) varArr[i]);
   } 
 }
