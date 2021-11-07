@@ -49,7 +49,7 @@
 /******** Constants *********/
 #define PACKET_BUFFER_SIZE 255
 #define MODE_NUM 16
-#define MENU_COUNT 7
+#define MENU_COUNT 9
 
 /* OLED Display */
 #define SCREEN_WIDTH 128
@@ -85,12 +85,14 @@ WiFiUDP UDP; // creating UDP object
 char packetBuffer[PACKET_BUFFER_SIZE]; // UDP Buffer
 
 /* OLED Display */
-String titles[MENU_COUNT] = {"Brightness", "Mode", "Sensivity", "Threshold", "Music Indicator", "Second Indicator", "Save Config."};
+String titles[MENU_COUNT] = {"Brightness", "Mode", "Sensivity", "Threshold", "Music Indicator", "Second Indicator", "Wifi Channel*", "Save Config.", "Restart"};
 bool titleOrValue = 0; // 0: title selected, 1: value selected
 int counter = 0; // titleIndex_x2
 int titleIndex = 0;
-int varArr_x2[MENU_COUNT - 1] = {511, 0, 8, 20, 2, 2}; // int brightness_x2 = 511, vuMode_x2 = 0, sensivity_x2 = 8, threshold_x2 = 20, bool musicInd_x2 = 2; secsInd_x2 = 2;
-uint8_t varArr[MENU_COUNT - 1] = {255, 0, 4, 10, 1, 1}; // uint8_t brightness = 255, vuMode = 0, sensivity = 4, threshold = 10,  bool musicInd = 1, bool secsInd = 1;
+int varArr_x2[MENU_COUNT - 2] = {511, 0, 8, 20, 2, 2, 2}; // int brightness_x2 = 511, vuMode_x2 = 0, sensivity_x2 = 8, threshold_x2 = 20, bool musicInd_x2 = 2; secsInd_x2 = 2;
+uint8_t varArr[MENU_COUNT - 2] = {255, 0, 4, 10, 1, 1, 1}; // uint8_t brightness = 255, vuMode = 0, sensivity = 4, threshold = 10,  bool musicInd = 1, bool secsInd = 1;
+String varRangeLimMin[MENU_COUNT] = {"0", "0", "0", "0", "0", "0", "1", "0", "0"};
+String varRangeLimMax[MENU_COUNT] = {"255", String(MODE_NUM-1), "255", "255", "1", "1", "13", "0", "0"};
 String boolArr[] = {"disabled", "enabled"};
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 byte displayUpdateIterCou = 0;
@@ -103,7 +105,30 @@ int previousStateCLK;
 bool configWillBeSaved = false;
 SoftwareI2C softwarei2c;
 
+/* General */
+bool goingToRestart = false;
+
 /******** Functions ********/
+
+void(* resetFunc) (void) = 0; // when you call it, it resets the board
+
+void restart_(){
+  display.clearDisplay();
+  display.fillRect(0, 0, 128, 16, WHITE);
+  display.setFont(&Dialog_plain_13);
+  display.setCursor(1, 12);
+  display.setTextColor(BLACK); // 'inverted' text
+  display.println("Please wait...");
+  display.setCursor(1, 25);
+  display.setFont(&Dialog_plain_11);
+  display.setTextColor(WHITE);
+  display.println("Device will restart in 2 seconds");
+  display.display();
+  
+  delay(2000);
+
+  resetFunc();
+}
 
 void normalizeVars(){
   for(int i = 0; i<(MENU_COUNT - 1); i++){
@@ -118,6 +143,17 @@ void normalizeVars(){
   
   varArr[4] = (varArr[4] % 2); // In fact, music indicator is a bool so scale it to be bool
   varArr[5] = (varArr[5] % 2); // In fact, indicate seconds is a bool so scale it to be bool
+
+  // Channel can be only in between [1-13]
+  if (varArr[6] < 1){
+    varArr[6] = 13;
+    varArr_x2[6] = 26;
+  }
+  else if (varArr[6] > 13){
+    varArr[6] = 1;
+    varArr_x2[6] = 2;
+  }
+  
 }
 
 void enableInterrupts(){
@@ -190,7 +226,10 @@ void handleBtn(){
   while(!digitalRead(ROTARY_BTN)) // wait until the btn released
     delay(2);
   
-  if(titleIndex == (MENU_COUNT - 1) ){ // If the menu on "save config"
+  if(titleIndex == (MENU_COUNT - 1) ){ // If the menu on "restart"
+    goingToRestart = true;
+  }
+  else if(titleIndex == (MENU_COUNT - 2) ){ // If the menu on "save config"
     configWillBeSaved = true;
   }
   else{
@@ -297,7 +336,7 @@ void updateDisplay(){
       display.println( boolArr[varArr[titleIndex]] );
     break;
 
-    case (MENU_COUNT - 1):  
+    case (MENU_COUNT - 2):  
       display.fillRect(0, 0, 128, 16, WHITE);
       display.setFont(&Dialog_plain_13);
       display.setCursor(1, 12);
@@ -308,6 +347,19 @@ void updateDisplay(){
       display.setFont(&Dialog_plain_13);
       display.setTextColor(WHITE); // 'inverted' text
       display.println("Click to save");
+    break;
+
+    case (MENU_COUNT - 1):  
+      display.fillRect(0, 0, 128, 16, WHITE);
+      display.setFont(&Dialog_plain_13);
+      display.setCursor(1, 12);
+      display.setTextColor(BLACK); // 'inverted' text
+      display.println(titles[titleIndex]);
+    
+      display.setCursor(1, 30);
+      display.setFont(&Dialog_plain_13);
+      display.setTextColor(WHITE); // 'inverted' text
+      display.println("Click to restart");
     break;
     
     default:
@@ -323,7 +375,7 @@ void updateDisplay(){
       display.setCursor(1, 30);
       display.setFont(&Dialog_plain_13);
       display.setTextColor(WHITE); // 'inverted' text
-      display.println("Range: [0-255]");
+      display.println("Range: [" + varRangeLimMin[titleIndex] + "-" + varRangeLimMax[titleIndex] + "]");
     
       display.fillRect(0, 36, 128, 27, titleOrValue);
       display.setCursor(1, 61);
@@ -334,15 +386,21 @@ void updateDisplay(){
   
   display.display();
 }
-
  
 void setup() {
   if (DEBUG_ENABLED){
     Serial.begin(DEBUG_RATE);
   }
   pinMode(LED_BUILTIN, OUTPUT);
+
+  softwarei2c.begin(EEPROM_SDA, EEPROM_SCL);
+  loadEEPROM();
+  initRotary();
+  initDisplay();
+  updateDisplay();
+  
   WiFi.softAPConfig(apIP, gateway, subnet);
-  WiFi.softAP(MY_SSID, PASSWORD, 13, false); //  WiFi.softAP(ssid, psk, channel, hidden, max_connection)
+  WiFi.softAP(MY_SSID, PASSWORD, varArr[6], false); //  WiFi.softAP(ssid, psk, channel, hidden, max_connection)
   // Begin listening to UDP port
   UDP.begin(UDP_REQUEST_PORT);
 
@@ -393,6 +451,11 @@ void loop() {
     saveConfig();
     configWillBeSaved = false;
     enableInterrupts();
+  }
+
+  // HANDLE RESTARTING
+  if(goingToRestart){
+    restart_();
   }
   
 }// END OF LOOP
