@@ -152,9 +152,13 @@ DEFINE_GRADIENT_PALETTE( pal6 ) {
   0, 255, 255, 255,
   255, 255, 255, 255};
 
-CRGBPalette16 palArr[] = {pal1, pal1, pal2, pal2, pal5, pal3, pal3, pal1, pal2, pal1, pal2, pal4, pal5, pal6};
-CRGB IndicatorColors[] = {CRGB(255,128,0), CRGB::White, CRGB(0,0,128), CRGB::White, CRGB::Green, CRGB::White, CRGB::White, CRGB::White, CRGB::White,  CRGB::White, CRGB::White, CRGB::White, CRGB::Green, CRGB::White};
-CRGB secsIndicatorColors[] = {CRGB::Yellow, CRGB::Yellow, CRGB::Cyan, CRGB::Cyan, CRGB::White, CRGB(255,128,0), CRGB(255,128,0), CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB(255,128,0), CRGB::White, CRGB::Red};
+DEFINE_GRADIENT_PALETTE( pal7 ) {
+  0, 255, 255, 0,
+  255, 255, 255, 0};
+
+CRGBPalette16 palArr[] = {pal1, pal1, pal2, pal2, pal5, pal7, pal3, pal3, pal1, pal2, pal1, pal2, pal4, pal5, pal6, pal6};
+CRGB IndicatorColors[] = {CRGB(255,128,0), CRGB::White, CRGB(0,0,128), CRGB::White, CRGB::Green, CRGB::Red, CRGB::White, CRGB::White, CRGB::White, CRGB::White,  CRGB::White, CRGB::White, CRGB::White, CRGB::Green, CRGB::White, CRGB::Red};
+CRGB secsIndicatorColors[] = {CRGB::Yellow, CRGB::Yellow, CRGB::Cyan, CRGB::Cyan, CRGB::White, CRGB::Green, CRGB(255,128,0), CRGB(255,128,0), CRGB::White, CRGB::White, CRGB::White, CRGB::White, CRGB(255,128,0), CRGB::White, CRGB::Red, CRGB(100,20,100)};
 
 void setupWifi(){
   WiFi.disconnect(); //Disconnect from old connections
@@ -182,7 +186,7 @@ void disableWifi(){
 }
 
 void painter(){
-  if (currMode >= 14){
+  if (currMode >= 16){
     prevMode = currMode;
     return;
   }
@@ -258,34 +262,34 @@ void handleRemoteMode(){
     painter();
   FastLED.setBrightness(brightness);
   
-  if (0 <= currMode && currMode <= 4){
-    drawVuSmooth(musicIndicatorEnabled, IndicatorCol); // drawVuSmooth(bool indicatorEnabled, CRGB indicatorColor)
-  }
-  else if (currMode == 5){
-    arrayShifter(1);
+  if (0 <= currMode && currMode <= 5){
     drawVuSmooth(musicIndicatorEnabled, IndicatorCol); // drawVuSmooth(bool indicatorEnabled, CRGB indicatorColor)
   }
   else if (currMode == 6){
+    arrayShifter(1);
+    drawVuSmooth(musicIndicatorEnabled, IndicatorCol); // drawVuSmooth(bool indicatorEnabled, CRGB indicatorColor)
+  }
+  else if (currMode == 7){
     arrayShifter(0);
     drawVuSmooth(musicIndicatorEnabled, IndicatorCol); // drawVuSmooth(bool indicatorEnabled, CRGB indicatorColor)    
   }
-  else if (7 <= currMode && currMode <= 8){
+  else if (8 <= currMode && currMode <= 9){
     dropWidthModulation();
   }
-  else if (9 <= currMode && currMode <= 10){
+  else if (10 <= currMode && currMode <= 11){
     drawVuFast();
   }
-  else if (currMode == 11){
+  else if (currMode == 12){
     colorShifter();
     drawVuSmooth(musicIndicatorEnabled, IndicatorCol); // drawVuSmooth(bool indicatorEnabled, CRGB indicatorColor)
   }
-  else if (currMode == 12){
+  else if (13 <= currMode && currMode <= 14){
     pwmVu();
   }
-  else if (currMode == 13){
+  else if (currMode == 15){
     torch(CRGB(255, 150, 40));
   }
-  else if (14 <= currMode && currMode <= 15){
+  else if (16 <= currMode && currMode <= 17){
     animatedFlag(currMode);
   }
 }
@@ -690,13 +694,13 @@ void animatedFlag(int which){
   uint16_t sinBeat4 = beatsin16(30, 0, NUM_LEDS - 1, 0, 21845);
   uint16_t sinBeat5 = beatsin16(30, 0, NUM_LEDS - 1, 0, 43690);
   switch(which){
-    case 14:
+    case 16:
       leds[sinBeat] = CRGB::White;
       leds[sinBeat2] = CRGB::Red;
       fadeToBlackBy(leds, NUM_LEDS, 10);
       FastLED.show();
       break;
-    case 15:
+    case 17:
       leds[sinBeat3] = CRGB::Green;
       leds[sinBeat4] = CRGB::Red;
       leds[sinBeat5] = CRGB::Cyan;

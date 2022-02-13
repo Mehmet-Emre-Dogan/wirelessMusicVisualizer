@@ -48,7 +48,7 @@
 
 /******** Constants *********/
 #define PACKET_BUFFER_SIZE 255
-#define MODE_NUM 16
+#define MODE_NUM 18
 #define MENU_COUNT 9
 
 /* OLED Display */
@@ -136,9 +136,14 @@ void normalizeVars(){
   }
 
   // Normalizing "Mode" variable
-  varArr[1] %= MODE_NUM;
-  if (varArr[1] < 0){
+  //varArr[1] %= MODE_NUM;
+  if (varArr[1] == 255){ // i.e. varArr[1] < 0 if it were not uint8_t
     varArr[1] = MODE_NUM - 1;
+    varArr_x2[1] = 2*(MODE_NUM - 1);
+  }
+  else if (varArr[1] > (MODE_NUM - 1)){
+    varArr[1] = 0;
+    varArr_x2[1] = 0;
   }
   
   varArr[4] = (varArr[4] % 2); // In fact, music indicator is a bool so scale it to be bool
@@ -403,12 +408,6 @@ void setup() {
   WiFi.softAP(MY_SSID, PASSWORD, varArr[6], false); //  WiFi.softAP(ssid, psk, channel, hidden, max_connection)
   // Begin listening to UDP port
   UDP.begin(UDP_REQUEST_PORT);
-
-  softwarei2c.begin(EEPROM_SDA, EEPROM_SCL);
-  loadEEPROM();
-  initRotary();
-  initDisplay();
-  updateDisplay();
 
   enableInterrupts();
 }// END OF SETUP
