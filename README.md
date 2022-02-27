@@ -2,9 +2,9 @@
 Using two node MCU ESP8266 modules and addressable RGB LED strip, visualize the music, display animated flags, brighten the darkness (with the help of torch and emergency torch modes), and even Adalight compatible. Therefore, you can use it with any kind of Adalight compatible software, such as [Prismatik Unofficial](https://github.com/psieg/Lightpack)
 
 # Abstract
-&emsp; **Purpose**: Measure the voltage level of the sound output of a device, i.e., computer, and send it to the receiver LED module via UDP protocol to visualize music.
+**Purpose**: Measure the voltage level of the sound output of a device, i.e., computer, and send it to the receiver LED module via UDP protocol to visualize music.
 <br>**Features**:<br>
-- &emsp; Ability to change the used wi-fi channel to keep away interference
+- Ability to change the used wi-fi channel to keep away interference
 - Capable of saving the current configuration to external I2C EEPROM to avoid adjusting the settings on each boot
 - Different colors and visualizing modes
 - Software restart mode for transmitter
