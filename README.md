@@ -3,6 +3,7 @@ Using two node MCU ESP8266 modules and addressable RGB LED strip, visualize the 
 
 # Abstract
 **Purpose**: Measure the voltage level of the sound output of a device, i.e., computer, and send it to the receiver LED module via UDP protocol to visualize music.
+
 <br>**Features**:<br>
 - Ability to change the used wi-fi channel to keep away interference
 - Capable of saving the current configuration to external I2C EEPROM to avoid adjusting the settings on each boot
