@@ -3,7 +3,6 @@ Using two node MCU ESP8266 modules and addressable RGB LED strip, visualize the 
 
 # Abstract
 **Purpose**: Measure the voltage level of the sound output of a device, i.e., computer, and send it to the receiver LED module via UDP protocol to visualize music.
-
 <br>**Features**:<br>
 - Ability to change the used wi-fi channel to keep away interference
 - Capable of saving the current configuration to external I2C EEPROM to avoid adjusting the settings on each boot
@@ -15,7 +14,7 @@ Using two node MCU ESP8266 modules and addressable RGB LED strip, visualize the 
 - Flag colored flowing light
 - Ambiance light changing color according to the seen video on the computer screen
 - Emergency light (with different tones of white)
-- 
+
 <br>**Notes**:<br>
 - Both transmitter and receiver stations’ CPU frequency is set to 160 MHz to increase stability and smoothness
 - Due to the nature of the UDP, sometimes packet drops occur. If the packet drops are incredibly high, changing the wi-fi channel is required. 
