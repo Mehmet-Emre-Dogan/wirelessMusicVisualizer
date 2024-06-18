@@ -10,6 +10,7 @@ Using two node MCU ESP8266 modules and addressable RGB LED strip, visualize the 
 - Different colors and visualizing modes
 - Software restart mode for transmitter
 - Very low latency (no noticeable lag even with listening to music with wired headphones)
+- Analog or serial data acquisition
 
 ## **Other Operating Modes**:
 - Flag colored flowing light
@@ -56,6 +57,15 @@ The real project looks way smoother than the gif. You may watch the YouTube vide
 # Usage
 ## Connection with the transmitter station
 Unpress the toggle switch first, then power up. If the transmitter station is near the receiver and turned on, the receiver will connect to the transmitter automatically and run according to the transmitter's configuration. 
+
+## Audio sources for the transmitter station
+### Analog
+- Connect the 3.5mm audio jack to the audio source (PC/phone/tablet etc.) via y-splitter cable
+- Select source as `analog` at the menu
+### Serial
+- Connect the transmitter station to a PC via USB cable.
+- Install a client ( example: https://github.com/Mehmet-Emre-Dogan/vu-meter-with-serial ) to the PC to passthrough the audio signal from PC speaker/microphone to the transmitter station
+- Select source as `serial` at the menu
 
 ## Enabling Adalight client mode
 Press the toggle switch, adjust the potentiometer knob to the maximum, then power up the receiver. If you see the red, green, blue colors, respectively, the Adalight client mode has been initialized successfully.

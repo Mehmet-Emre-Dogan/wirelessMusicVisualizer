@@ -27,6 +27,7 @@
  * 
 */
 #define DEBUG_ENABLED false
+#define UART_DATA_MESSAGE_BAUDRATE 115200
 
 /* Libraries */
 #include <ESP8266WiFi.h>
@@ -49,7 +50,7 @@
 /******** Constants *********/
 #define PACKET_BUFFER_SIZE 255
 #define MODE_NUM 18
-#define MENU_COUNT 9
+#define MENU_COUNT 10
 
 /* OLED Display */
 #define SCREEN_WIDTH 128
@@ -85,17 +86,21 @@ WiFiUDP UDP; // creating UDP object
 char packetBuffer[PACKET_BUFFER_SIZE]; // UDP Buffer
 
 /* OLED Display */
-String titles[MENU_COUNT] = {"Brightness", "Mode", "Sensivity", "Threshold", "Music Indicator", "Second Indicator", "Wifi Channel*", "Save Config.", "Restart"};
+String titles[MENU_COUNT] = {"Brightness", "Mode", "Sensivity", "Threshold", "Music Indicator", "Second Indicator", "Wifi Channel*", "Source", "Save Config.", "Restart"};
 bool titleOrValue = 0; // 0: title selected, 1: value selected
 int counter = 0; // titleIndex_x2
 int titleIndex = 0;
-int varArr_x2[MENU_COUNT - 2] = {511, 0, 8, 20, 2, 2, 2}; // int brightness_x2 = 511, vuMode_x2 = 0, sensivity_x2 = 8, threshold_x2 = 20, bool musicInd_x2 = 2; secsInd_x2 = 2;
-uint8_t varArr[MENU_COUNT - 2] = {255, 0, 4, 10, 1, 1, 1}; // uint8_t brightness = 255, vuMode = 0, sensivity = 4, threshold = 10,  bool musicInd = 1, bool secsInd = 1;
-String varRangeLimMin[MENU_COUNT] = {"0", "0", "0", "0", "0", "0", "1", "0", "0"};
-String varRangeLimMax[MENU_COUNT] = {"255", String(MODE_NUM-1), "255", "255", "1", "1", "13", "0", "0"};
+int varArr_x2[MENU_COUNT - 2] = {511, 0, 8, 20, 2, 2, 2, 0}; // int brightness_x2 = 511, vuMode_x2 = 0, sensivity_x2 = 8, threshold_x2 = 20, bool musicInd_x2 = 2; secsInd_x2 = 2; WifiChannel_x2 = 22; Source_x2 = 0;
+uint8_t varArr[MENU_COUNT - 2] = {255, 0, 4, 10, 1, 1, 1,  0}; // uint8_t brightness = 255, vuMode = 0, sensivity = 4, threshold = 10,  bool musicInd = 1, bool secsInd = 1; WifiChannel = 11; Source = 0;
+String varRangeLimMin[MENU_COUNT] = {"0", "0", "0", "0", "0", "0", "1", "0", "0", "0"};
+String varRangeLimMax[MENU_COUNT] = {"255", String(MODE_NUM-1), "255", "255", "1", "1", "13", "1", "0", "0"};
 String boolArr[] = {"disabled", "enabled"};
+String saSources[] = {"analog", "serial"};
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 byte displayUpdateIterCou = 0;
+
+/* Serial Comm */
+uint8_t ui8ReceivedAmplitudeInBits = 0;
 
 /* Rotary Encoder */
 int currentStateCLK;
@@ -158,7 +163,9 @@ void normalizeVars(){
     varArr[6] = 1;
     varArr_x2[6] = 2;
   }
-  
+
+  varArr[7] = (varArr[7] % 2); // In fact, input  is a bool so scale it to be bool
+ 
 }
 
 void enableInterrupts(){
@@ -341,6 +348,28 @@ void updateDisplay(){
       display.println( boolArr[varArr[titleIndex]] );
     break;
 
+    case 7:  
+      // 0: title selected, 1: value selected
+      // BLACK: 0, WHITE: 1
+      
+      display.fillRect(0, 0, 128, 16, !titleOrValue);
+      display.setFont(&Dialog_plain_13);
+      display.setCursor(1, 12);
+      display.setTextColor(titleOrValue); // 'inverted' text
+      display.println(titles[titleIndex]);
+    
+      display.setCursor(1, 30);
+      display.setFont(&Dialog_plain_13);
+      display.setTextColor(WHITE); // 'inverted' text
+      display.println("Analog/Serial");
+    
+      display.fillRect(0, 36, 128, 27, titleOrValue);
+      display.setCursor(1, 61);
+      display.setFont(&FreeSans18pt7b);
+      display.setTextColor(!titleOrValue); // 'inverted' text
+      display.println( saSources[varArr[titleIndex]] );
+    break;
+    
     case (MENU_COUNT - 2):  
       display.fillRect(0, 0, 128, 16, WHITE);
       display.setFont(&Dialog_plain_13);
@@ -393,8 +422,13 @@ void updateDisplay(){
 }
  
 void setup() {
-  if (DEBUG_ENABLED){
+  if (DEBUG_ENABLED)
+  {
     Serial.begin(DEBUG_RATE);
+  }
+  else
+  {
+    Serial.begin(UART_DATA_MESSAGE_BAUDRATE);
   }
   pinMode(LED_BUILTIN, OUTPUT);
 
@@ -413,6 +447,10 @@ void setup() {
 }// END OF SETUP
  
 void loop() {
+  if(Serial.available())
+  {
+    ui8ReceivedAmplitudeInBits = Serial.read();
+  }
   // HANDLE UDP COMMUNICATION
   // if there's data available, read a packet
   int packetSize = UDP.parsePacket();
@@ -425,7 +463,17 @@ void loop() {
      // send the measurement result to the receiver
     UDP.beginPacket(UDP.remoteIP(), UDP_RESPONSE_PORT);
     char* strBuf = "err";
-    String mystr = (String(measureAverage(NUM_MEASUREMENTS)) + ":" );
+    
+    int16_t i16AmplitudeInBits = 0;
+    if(varArr[7])
+    {
+      i16AmplitudeInBits = MeasureFromSerial();
+    }
+    else
+    {
+      i16AmplitudeInBits = measureAverage(NUM_MEASUREMENTS);
+    }
+    String mystr = (String(i16AmplitudeInBits) + ":" );
     for( int i = 0; i < (MENU_COUNT-3); i++){
       if (i == 3)
         continue;
@@ -435,7 +483,6 @@ void loop() {
     UDP.write(strBuf);
     UDP.endPacket();
     
-
   }
 
   // HANDLE OLED DISPLAY SCREEN  i.e. update the creeen if necessary
@@ -481,6 +528,13 @@ int measureRaw(){
   if(output > 512)
     output = 512;
   return output;
+}
+
+int MeasureFromSerial(void)
+{
+  int16_t i16Output = 0;
+  i16Output = ui8ReceivedAmplitudeInBits * 2;
+  return i16Output;
 }
 
 
